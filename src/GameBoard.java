@@ -208,22 +208,12 @@ public class GameBoard extends JFrame implements ActionListener{
 					if (!neighbor.isOpen()) {
 						openList.add(neighbor);
 						neighbor.setOpen(true);
-						if (neighbor.state == TileState.COLLIDABLE)
-							System.out.println("WRONG");
 						
 						neighbor.setParent(consireredTile);
-						neighbor.setBackground(Color.PINK);
-						neighbor.paint(neighbor.getGraphics());
 						
 						neighbor.setFromStart(consireredTile.isDiagonal(neighbor) ?
 								consireredTile.getFromStart() + DIAGONALCOST :
 									consireredTile.getFromStart() + 1);
-						
-						try {
-							Thread.sleep(SLEEPTIME);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
 					}
 					
 					// If the path we are currently trying is shorter than the previously recorded (for this tile), 
@@ -232,6 +222,7 @@ public class GameBoard extends JFrame implements ActionListener{
 						if (neighbor.getFromStart() > (consireredTile.isDiagonal(neighbor) ?
 								consireredTile.getFromStart() + DIAGONALCOST :
 									consireredTile.getFromStart() + 1)) {
+						
 							neighbor.setParent(consireredTile);
 							neighbor.setFromStart(consireredTile.isDiagonal(neighbor) ?
 									consireredTile.getFromStart() + DIAGONALCOST :
