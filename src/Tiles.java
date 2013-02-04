@@ -89,7 +89,7 @@ public class Tiles extends JButton {
 		return neighbors;
 	}
 
-	public void addToNeighbors (Tiles neighbor) {
+	public void addNeighbor (Tiles neighbor) {
 		this.neighbors.add(neighbor);
 	}
 
@@ -107,6 +107,10 @@ public class Tiles extends JButton {
 
 	public void setClosed(boolean closed) {
 		this.closed = closed;
+	}
+	
+	public void clearNeighbours () {
+		this.neighbors.clear();
 	}
 	
 	/**

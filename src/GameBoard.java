@@ -13,6 +13,7 @@ import javax.swing.WindowConstants;
 
 
 
+
 public class GameBoard extends JFrame implements ActionListener{
 	
 	/**
@@ -115,6 +116,7 @@ public class GameBoard extends JFrame implements ActionListener{
 						gameBoardState[i][l].setToStop(this.stop);
 						gameBoardState[i][l].setOpen(false);
 						gameBoardState[i][l].setClosed(false);
+						gameBoardState[i][l].clearNeighbours();
 					}
 				}
 				generateNeighbors();
@@ -206,6 +208,9 @@ public class GameBoard extends JFrame implements ActionListener{
 					if (!neighbor.isOpen()) {
 						openList.add(neighbor);
 						neighbor.setOpen(true);
+						if (neighbor.state == TileState.COLLIDABLE)
+							System.out.println("WRONG");
+						
 						neighbor.setParent(consireredTile);
 						neighbor.setBackground(Color.PINK);
 						neighbor.paint(neighbor.getGraphics());
@@ -278,51 +283,51 @@ public class GameBoard extends JFrame implements ActionListener{
 		int buttom = tile.getColumn() - 1;
 		int right = tile.getRow() + 1;
 		int left = tile.getRow() - 1;
-	
+
 		if (top < columns) {
-			if (isRelevant(tile,gameBoardState[tile.getRow()][top])){
-				tile.addToNeighbors(gameBoardState[tile.getRow()][top]);
+			if (isRelevant(tile, gameBoardState[tile.getRow()][top])) {
+				tile.addNeighbor(gameBoardState[tile.getRow()][top]);
 			}
-	
+
 			if (right < rows) {
-				if (isRelevant(tile, gameBoardState[right][top])){
-					tile.addToNeighbors(gameBoardState[right][top]);
+				if (isRelevant(tile, gameBoardState[right][top])) {
+					tile.addNeighbor(gameBoardState[right][top]);
 				}
 			}
 			if (left >= 0) {
-				if (isRelevant(tile,gameBoardState[left][top])){
-					tile.addToNeighbors(gameBoardState[left][top]);
+				if (isRelevant(tile, gameBoardState[left][top])) {
+					tile.addNeighbor(gameBoardState[left][top]);
 				}
 			}
 		}
 		if (buttom >= 0) {
-			if (isRelevant(tile,gameBoardState[tile.getRow()][buttom])){
-				tile.addToNeighbors(gameBoardState[tile.getRow()][buttom]);
+			if (isRelevant(tile, gameBoardState[tile.getRow()][buttom])) {
+				tile.addNeighbor(gameBoardState[tile.getRow()][buttom]);
 			}
-	
+
 			if (right < rows) {
-				if (isRelevant(tile,gameBoardState[right][buttom])){
-					tile.addToNeighbors(gameBoardState[right][buttom]);
+				if (isRelevant(tile, gameBoardState[right][buttom])) {
+					tile.addNeighbor(gameBoardState[right][buttom]);
 				}
 			}
-	
+
 			if (left >= 0) {
-				if (isRelevant(tile,gameBoardState[left][buttom])){
-					tile.addToNeighbors(gameBoardState[left][buttom]);
+				if (isRelevant(tile, gameBoardState[left][buttom])) {
+					tile.addNeighbor(gameBoardState[left][buttom]);
 				}
 			}
 		}
-			if (left >= 0) {
-				if (isRelevant(tile,gameBoardState[left][tile.getColumn()])){
-					tile.addToNeighbors(gameBoardState[left][tile.getColumn()]);
-				}
-			}
-			if (right < rows) {
-				if (isRelevant(tile,gameBoardState[right][tile.getColumn()])){
-					tile.addToNeighbors(gameBoardState[right][tile.getColumn()]);
-				}
+		if (left >= 0) {
+			if (isRelevant(tile, gameBoardState[left][tile.getColumn()])) {
+				tile.addNeighbor(gameBoardState[left][tile.getColumn()]);
 			}
 		}
+		if (right < rows) {
+			if (isRelevant(tile, gameBoardState[right][tile.getColumn()])) {
+				tile.addNeighbor(gameBoardState[right][tile.getColumn()]);
+			}
+		}
+	}
 
 	/**
 	 * Checks if a certain tile should be added to the current Tiles list of
@@ -333,14 +338,11 @@ public class GameBoard extends JFrame implements ActionListener{
 	 * the two tiles will not go through a wall.
 	 */
 	private boolean isRelevant(Tiles currentTile, Tiles consideredTile) {
-		if (consideredTile.getState() == TileState.COLLIDABLE) {
+		if (consideredTile.getState() == TileState.COLLIDABLE) 
 			return false;
-		} else {
-			int dx = consideredTile.getRow() - currentTile.getRow();
-			int dy = consideredTile.getColumn() - currentTile.getColumn();
-			return (gameBoardState[currentTile.getRow() + dx][currentTile.getColumn()].getState() != TileState.COLLIDABLE 
-			         && gameBoardState[currentTile.getRow()][currentTile.getColumn() + dy].getState() != TileState.COLLIDABLE);
-		}
+	
+		return (gameBoardState[currentTile.getRow()][consideredTile.getColumn()].getState() != TileState.COLLIDABLE 
+		         && gameBoardState[consideredTile.getRow()][currentTile.getColumn()].getState() != TileState.COLLIDABLE);
 	}
 
 
@@ -349,8 +351,5 @@ public class GameBoard extends JFrame implements ActionListener{
 	 */
 	public static void main(String[] args) {
 		new GameBoard(20, 20);
-
 	}
-	
-
 }
